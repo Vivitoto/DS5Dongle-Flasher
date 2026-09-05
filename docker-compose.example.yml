@@ -1,0 +1,19 @@
+services:
+  ds5dongle-flasher:
+    image: vivitoto/ds5dongle-flasher:0.1.0
+    ports:
+      - "8888:3000"
+    environment:
+      GITHUB_REPO: sqlCRT/ds5dongle-bl618-opensource
+      # Optional: raise GitHub API limits
+      # GITHUB_TOKEN: <your-github-token>
+      # Optional: proxy for GitHub release fetches
+      # HTTP_PROXY: http://192.168.31.216:7890
+      # HTTPS_PROXY: http://192.168.31.216:7890
+      # ALL_PROXY: http://192.168.31.216:7890
+    volumes:
+      - ds5dongle-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  ds5dongle-data:

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DS5Dongle 刷机助手</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">DS</div>
+        <div>
+          <h1>DS5Dongle 刷机助手</h1>
+        </div>
+      </div>
+      <div class="brand-meta">
+        <span class="pill ghost" id="appStatus">待机</span>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="panel left-panel">
+                <div class="subpanel-header">
+                  <div>
+                    <h2>固件版本</h2>
+                    <p>先看内容，再选版本。列表拉取失败时，可填 GITHUB_TOKEN。</p>
+                  </div>
+                  <div class="variant-switch" role="tablist" aria-label="固件类型">
+                    <button id="variantStd" class="chip-button active" type="button" data-variant="std">标准版</button>
+                    <button id="variantHs" class="chip-button" type="button" data-variant="hs">HS</button>
+                  </div>
+                </div>
+
+        <div id="releaseList" class="release-list" aria-live="polite"></div>
+      </section>
+
+      <section class="panel right-panel">
+        <div class="stack">
+          <div class="subpanel">
+            <div class="subpanel-header">
+              <div>
+                <h2>串口连接</h2>
+                <p>先点连接。浏览器会弹出串口选择框，选一次后可直接复用。</p>
+              </div>
+              <span id="serialState" class="status-pill muted">未连接</span>
+            </div>
+
+            <div class="control-row">
+              <label class="field">
+                <span>波特率</span>
+                <input id="baudRate" type="number" min="9600" step="1" value="115200" />
+              </label>
+              <div class="button-row">
+                <button id="connectSerial" type="button">连接串口</button>
+                <button id="reselectSerial" type="button" class="ghost">重新选择串口</button>
+                <button id="disconnectSerial" type="button" class="ghost">断开</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="subpanel">
+            <div class="subpanel-header">
+              <div>
+                <h2>烧录</h2>
+                <p>选中版本后会自动准备文件。下面这块显示当前状态。</p>
+              </div>
+              <button id="flashButton" type="button" class="primary">开始烧录</button>
+            </div>
+
+            <div class="package-summary" id="packageSummary">
+              <span class="pill subtle">未选择版本</span>
+              <span class="pill subtle">串口未连接</span>
+              <span class="pill subtle">STD 模式</span>
+            </div>
+
+            <div class="progress-wrap">
+              <div class="progress-track" aria-hidden="true">
+                <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+              </div>
+              <div class="progress-meta">
+                <span id="progressLabel">等待选择 release</span>
+                <span id="progressValue">0%</span>
+              </div>
+            </div>
+
+            <div id="packageCard" class="package-card empty">
+              <div class="package-head">
+                <div>
+                  <strong id="packageTitle">还没选包</strong>
+                  <p id="packageMeta">点开某个 release 后，会自动拉取、解压并准备好文件。</p>
+                </div>
+              </div>
+              <ul id="packageFiles" class="package-files"></ul>
+            </div>
+          </div>
+
+          <div class="subpanel log-panel">
+            <div class="subpanel-header">
+              <div>
+                <h2>日志</h2>
+                <p>只看关键步骤和串口输出。</p>
+              </div>
+              <button id="clearLog" type="button" class="ghost">清空</button>
+            </div>
+            <pre id="logWindow" class="log-window" aria-live="polite"></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+

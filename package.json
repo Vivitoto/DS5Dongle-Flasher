@@ -1,0 +1,16 @@
+{
+  "name": "ds5dongle-flasher",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "extract-zip": "^2.0.1",
+    "playwright": "^1.63.0",
+    "undici": "^7.13.0"
+  }
+}
