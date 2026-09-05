@@ -1,48 +1,22 @@
 # DS5Dongle Flasher
 
-Minimal Dockerized web app for browsing GitHub releases, preparing a flash package, and driving a browser-side Web Serial flow.
+Monorepo for the DS5Dongle flasher project.
 
-## Run
+This repo contains two clients for the same flashing flow:
 
-```bash
-docker compose -f docker-compose.example.yml up --build
-```
+- `.` — Docker/web client for NAS or server deployment
+- `desktop/` — Windows desktop client packaged with Electron
 
-Open `http://localhost:3000` in a Chromium-based browser. Web Serial needs a secure context, and `localhost` is treated as secure.
+## Web / Docker client
 
-If you want to expose it through a reverse proxy, keep the container on port 3000 and map any host port you like in compose, for example `8888:3000`.
-For the published image, the example compose points to `vivitoto/ds5dongle-flasher:0.1.0`.
+See `README.md` and `docker-compose.example.yml`.
 
-## What it does
+## Desktop client
 
-- Fetches GitHub releases for a configurable repo
-- Shows accordion release cards with version and publish date
-- Lets you switch between `STD` and `HS` firmware variants
-- Downloads the release zip asset, extracts it, and exposes the files through the app
-- Connects to a device over Web Serial and streams logs
-- Keeps the flash sequence stubbed, but wires progress and log updates end to end
+See `desktop/README.md`.
 
-## Environment
+Desktop release tags use the `desktop-v*.*.*` namespace so they do not trigger the Docker image workflow.
 
-The app reads configuration from Docker/compose environment variables:
+## Common backend logic
 
-- `GITHUB_REPO` default: `sqlCRT/ds5dongle-bl618-opensource`
-- You can also split it with `GITHUB_OWNER` + `GITHUB_REPO`
-- `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` forwarded to GitHub requests when set
-- `GITHUB_TOKEN` optional, useful for higher GitHub API limits; set it only if you want more reliable release fetching
-
-## Local development
-
-```bash
-npm install
-npm test
-npm start
-```
-
-## Repo layout
-
-- `server.js` Express backend
-- `src/github.js` GitHub API, proxy, cache, and package prep logic
-- `public/` frontend assets
-- `test/release.test.js` release and manifest tests
-
+Release fetching, package prep, and file routing are shared through the same GitHub helper logic, with the client shell changing between web and desktop.

@@ -4,3 +4,5 @@ data/
 .env.*
 .DS_Store
 npm-debug.log*
+desktop/node_modules/
+desktop/dist-electron/

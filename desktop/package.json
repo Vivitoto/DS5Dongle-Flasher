@@ -1,0 +1,48 @@
+{
+  "name": "ds5dongle-flasher-desktop",
+  "version": "0.1.2",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "node server.js",
+    "desktop": "electron .",
+    "test": "node --test",
+    "dist:win": "electron-builder --win portable"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "extract-zip": "^2.0.1",
+    "undici": "^7.13.0"
+  },
+  "devDependencies": {
+    "electron": "^37.2.3",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.nousresearch.ds5dongleflasher.desktop",
+    "productName": "DS5Dongle Flasher",
+    "artifactName": "DS5Dongle-Flasher-v${version}-portable.${ext}",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "electron/**/*",
+      "public/**/*",
+      "server.js",
+      "src/**/*",
+      "test/**/*",
+      "package.json",
+      "README.md"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    }
+  }
+}

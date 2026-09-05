@@ -4,4 +4,5 @@ data
 .git
 Dockerfile
 docker-compose.yml
-
+desktop/node_modules
+desktop/dist-electron
