@@ -1,6 +1,6 @@
 services:
   ds5dongle-flasher:
-    image: vivitoto/ds5dongle-flasher:0.1.0
+    image: vivitoto/ds5dongle-flasher:0.1.1
     ports:
       - "8888:3000"
     environment:
