@@ -8,9 +8,9 @@ services:
       # Optional: raise GitHub API limits
       # GITHUB_TOKEN: <your-github-token>
       # Optional: proxy for GitHub release fetches
-      # HTTP_PROXY: http://192.168.31.216:7890
-      # HTTPS_PROXY: http://192.168.31.216:7890
-      # ALL_PROXY: http://192.168.31.216:7890
+      # HTTP_PROXY: http://proxy.example:7890
+      # HTTPS_PROXY: http://proxy.example:7890
+      # ALL_PROXY: http://proxy.example:7890
     volumes:
       - ds5dongle-data:/app/data
     restart: unless-stopped
