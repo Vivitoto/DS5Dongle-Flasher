@@ -1,4 +1,4 @@
-# DS5Dongle Flasher Desktop v0.1.2
+# DS5Dongle Flasher Desktop v0.1.0
 
 Portable Windows EXE release for the DS5Dongle flasher desktop client.
 
@@ -12,7 +12,7 @@ Portable Windows EXE release for the DS5Dongle flasher desktop client.
 
 ## Download
 
-- `DS5Dongle-Flasher-v0.1.2-portable.exe`
+- `DS5Dongle-Flasher-v0.1.0-portable.exe`
 - `SHA256SUMS.txt`
 
 ## Notes
