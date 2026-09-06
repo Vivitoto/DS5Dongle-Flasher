@@ -1,21 +1,20 @@
-# DS5Dongle Flasher Desktop v0.1.0
+# DS5Dongle Flasher 桌面版 v0.1.0
 
-Portable Windows EXE release for the DS5Dongle flasher desktop client.
+DS5Dongle 刷机桌面客户端的 Windows 便携版发布。
 
-## What changed
+## 这次更新了什么
 
-- Desktop Electron shell for the flasher flow
-- GitHub release downloads now follow the active Windows/Electron proxy when enabled
-- Direct connection works when no system proxy is configured
-- Polished desktop UI with compact release cards and proxy status badge
-- Portable single-file Windows EXE packaging
+- 新增桌面版 Electron 壳
+- 拉取 GitHub release 时会跟随 Windows / Electron 当前系统代理
+- 没开系统代理时会直接连接
+- 桌面 UI 做了更紧凑的卡片和代理状态展示
+- 支持单文件便携版 Windows EXE 打包
 
-## Download
+## 下载
 
 - `DS5Dongle-Flasher-v0.1.0-portable.exe`
-- `SHA256SUMS.txt`
 
-## Notes
+## 说明
 
-- This release is for the desktop app only.
-- Docker image versions and Docker release flow are unchanged.
+- 这是桌面版发布，不是 Docker 镜像发布。
+- Docker 镜像版本和 Docker 发布链路都不变。

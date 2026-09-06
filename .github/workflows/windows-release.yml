@@ -1,5 +1,5 @@
 name: Build and publish Windows portable EXE
-# Desktop-only release flow; does not touch Docker image versions.
+# 桌面版独立发布流程，不影响 Docker 镜像版本。
 
 on:
   push:
@@ -36,15 +36,6 @@ jobs:
       - name: Build portable EXE
         run: npm run dist:win
 
-      - name: Generate checksum
-        shell: pwsh
-        run: |
-          $exe = Get-ChildItem dist-electron -Filter '*.exe' | Select-Object -First 1
-          if (-not $exe) { throw 'No EXE artifact found in dist-electron' }
-          Get-FileHash $exe.FullName -Algorithm SHA256 |
-            ForEach-Object { "$($_.Hash.ToLower())  $($exe.Name)" } |
-            Set-Content -NoNewline dist-electron/SHA256SUMS.txt
-
       - name: Upload GitHub Release assets
         uses: softprops/action-gh-release@v2
         with:
@@ -52,5 +43,4 @@ jobs:
           body_path: desktop/RELEASE_NOTES.md
           files: |
             desktop/dist-electron/*.exe
-            desktop/dist-electron/SHA256SUMS.txt
           fail_on_unmatched_files: true

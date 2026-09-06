@@ -1,26 +1,13 @@
-# DS5Dongle Flasher Desktop
+# DS5Dongle Flasher 桌面版
 
-Independent Electron desktop scaffold for the DS5Dongle flasher flow.
+DS5Dongle 刷机流程的 Electron 桌面客户端。
 
-## What this project is
+## 下载
 
-- Electron `BrowserWindow` shell
-- Local Express helper server started from Electron
-- Release fetch and package-prep logic reused from the web app
-- Local app data storage under the user profile
-- Desktop-first UI for release selection and package prep
-- Windows portable EXE packaging target for one-file distribution
-- GitHub Release asset publishing for the portable EXE
+- GitHub Release：<https://github.com/Vivitoto/DS5Dongle-Flasher/releases/tag/desktop-v0.1.0>
+- 便携版 EXE：`DS5Dongle-Flasher-v0.1.0-portable.exe`
 
-## Layout
-
-- `electron/main.js` Electron bootstrap
-- `server.js` Express API and static asset server
-- `src/github.js` GitHub release, cache, and package logic
-- `public/index.html` desktop UI
-- `test/github.test.js` Node test coverage for release and manifest helpers
-
-## Run
+## 从源码运行
 
 ```bash
 npm install
@@ -28,34 +15,14 @@ npm test
 npm run desktop
 ```
 
-## Build a Windows EXE
+## 打 Windows EXE
 
 ```bash
 npm run dist:win
 ```
 
-Output lands in `dist-electron/` as a portable EXE named like `DS5Dongle-Flasher-v0.1.0-portable.exe`.
+## 说明
 
-## Publish to GitHub Release
-
-- Tag a release as `desktop-v0.1.2`
-- Build on Windows CI
-- Upload the portable EXE to the GitHub Release assets
-- Keep the asset name as `DS5Dongle-Flasher-v0.1.2-portable.exe`
-- Keep the SHA256 alongside it as `SHA256SUMS.txt`
-
-## Release checklist
-
-- Bump only the desktop app version in this repo
-- Do **not** touch Docker image versions or Docker release flow
-- Run `npm test`
-- Build the portable EXE on Windows
-- Verify the release asset name and checksum
-- Publish the GitHub Release
-
-## Notes
-
-- The scaffold is runnable on the current platform as a source project.
-- Windows EXE packaging is configured as a portable target so users can grab one EXE.
-- Data is stored in the app userData directory, not under the Docker project.
-- This desktop repo is versioned independently from the Docker project.
+- 桌面版 release tag 使用 `desktop-v*.*.*` 命名空间。
+- 不会触发 Docker 镜像发布流程。
+- 数据保存在应用的 userData 目录，不在 Docker 项目里。

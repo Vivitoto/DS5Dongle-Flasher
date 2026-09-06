@@ -1,22 +1,25 @@
 # DS5Dongle Flasher
 
-Monorepo for the DS5Dongle flasher project.
+DS5Dongle 刷机项目的 monorepo。
 
-This repo contains two clients for the same flashing flow:
+这个仓库包含同一套刷机流程的两个客户端：
 
-- `.` — Docker/web client for NAS or server deployment
-- `desktop/` — Windows desktop client packaged with Electron
+- `.` —— Docker / Web 客户端，适合 NAS 或服务器部署
+- `desktop/` —— 打包成 Electron 的 Windows 桌面客户端
 
-## Web / Docker client
+## Web / Docker 客户端
 
-See `README.md` and `docker-compose.example.yml`.
+见 `README.md` 和 `docker-compose.example.yml`。
 
-## Desktop client
+## 桌面客户端
 
-See `desktop/README.md`.
+见 `desktop/README.md`。
 
-Desktop release tags use the `desktop-v*.*.*` namespace so they do not trigger the Docker image workflow.
+桌面版 release tag 使用 `desktop-v*.*.*` 命名空间，不会触发 Docker 镜像工作流。
 
-## Common backend logic
+最新桌面版 release：
+- <https://github.com/Vivitoto/DS5Dongle-Flasher/releases/tag/desktop-v0.1.0>
 
-Release fetching, package prep, and file routing are shared through the same GitHub helper logic, with the client shell changing between web and desktop.
+## 共用后端逻辑
+
+GitHub release 拉取、刷机包准备、文件路由都复用同一套 GitHub helper 逻辑，只是外层客户端壳不同。
