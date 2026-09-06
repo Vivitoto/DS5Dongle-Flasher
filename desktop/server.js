@@ -102,6 +102,27 @@ function createApp(config, env = process.env, proxyResolver = null) {
     }
   });
 
+  app.post('/api/packages/:packageId/open', async (req, res) => {
+    const packageId = req.params.packageId;
+    const packageDir = path.join(config.dataDir, 'packages', packageId);
+    try {
+      await fs.access(packageDir);
+      if (process.platform === 'win32') {
+        const { spawn } = await import('node:child_process');
+        spawn('explorer', [packageDir], { detached: true, stdio: 'ignore' }).unref();
+      } else if (process.platform === 'darwin') {
+        const { spawn } = await import('node:child_process');
+        spawn('open', [packageDir], { detached: true, stdio: 'ignore' }).unref();
+      } else {
+        const { spawn } = await import('node:child_process');
+        spawn('xdg-open', [packageDir], { detached: true, stdio: 'ignore' }).unref();
+      }
+      res.json({ ok: true, packageDir });
+    } catch {
+      res.status(404).json({ error: 'Package not found' });
+    }
+  });
+
   app.get('/api/packages/:packageId/file', async (req, res) => {
     const packageId = req.params.packageId;
     const relativePath = String(req.query.path || '');

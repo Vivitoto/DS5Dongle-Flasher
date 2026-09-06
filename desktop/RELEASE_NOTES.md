@@ -1,18 +1,19 @@
-# DS5Dongle Flasher 桌面版 v0.1.0
+# DS5Dongle Flasher 桌面版 v0.1.1
 
-DS5Dongle 刷机桌面客户端的 Windows 便携版发布。
+这版主要把桌面客户端收口成一个能直接用的烧录工具。
 
 ## 这次更新了什么
 
-- 新增桌面版 Electron 壳
-- 拉取 GitHub release 时会跟随 Windows / Electron 当前系统代理
-- 没开系统代理时会直接连接
-- 桌面 UI 做了更紧凑的卡片和代理状态展示
+- 中文界面补齐了
+- 桌面端可以直接连串口
+- 可以拉取最新 release 并准备固件
+- 烧录流程和进度提示更清楚
 - 支持单文件便携版 Windows EXE 打包
+- 桌面版和 Docker 版本线分开，互不影响
 
 ## 下载
 
-- `DS5Dongle-Flasher-v0.1.0-portable.exe`
+- `DS5Dongle-Flasher-v0.1.1-portable.exe`
 
 ## 说明
 

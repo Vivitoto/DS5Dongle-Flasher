@@ -1,6 +1,6 @@
 # DS5Dongle Flasher 桌面版
 
-DS5Dongle 刷机流程的 Electron 桌面客户端。
+这是 DS5Dongle 刷机流程的 Electron 桌面客户端。
 
 ## 下载
 
@@ -26,3 +26,5 @@ npm run dist:win
 - 桌面版 release tag 使用 `desktop-v*.*.*` 命名空间。
 - 不会触发 Docker 镜像发布流程。
 - 数据保存在应用的 userData 目录，不在 Docker 项目里。
+- Windows 上出现“未知发布者 / 未签名”提示，属于系统对未做代码签名的 EXE 的正常提醒；要彻底去掉只能做代码签名。
+- EXE 图标已经换成了手柄风格。

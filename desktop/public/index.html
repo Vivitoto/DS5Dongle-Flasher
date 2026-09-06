@@ -1,445 +1,117 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DS5Dongle Flasher</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #07111b;
-        --bg2: #0b1622;
-        --panel: rgba(16, 25, 36, 0.9);
-        --panel-2: rgba(12, 20, 30, 0.94);
-        --text: #e8eef5;
-        --muted: #8f9dad;
-        --accent: #58a6ff;
-        --accent-2: #7c5cff;
-        --ok: #2dd4bf;
-        --warn: #f59e0b;
-        --danger: #fb7185;
-        --border: rgba(137, 165, 194, 0.18);
-        --shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        color: var(--text);
-        font-family: Segoe UI, Inter, system-ui, sans-serif;
-        background:
-          radial-gradient(circle at top left, rgba(88, 166, 255, 0.16), transparent 28%),
-          radial-gradient(circle at top right, rgba(124, 92, 255, 0.12), transparent 24%),
-          linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
-        min-height: 100vh;
-      }
-      header {
-        padding: 24px 28px 18px;
-        border-bottom: 1px solid var(--border);
-        background: rgba(7, 17, 27, 0.78);
-        position: sticky;
-        top: 0;
-        z-index: 5;
-        backdrop-filter: blur(14px);
-      }
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-      .logo {
-        width: 42px;
-        height: 42px;
-        border-radius: 14px;
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        box-shadow: 0 10px 30px rgba(88, 166, 255, 0.3);
-        display: grid;
-        place-items: center;
-        font-weight: 800;
-        letter-spacing: 0.04em;
-      }
-      h1 { margin: 0; font-size: 23px; }
-      .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
-      .statusline { display: flex; align-items: center; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
-      .statusdot {
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        background: var(--warn);
-        box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.12);
-      }
-      .statusdot.ok { background: var(--ok); box-shadow: 0 0 0 6px rgba(45, 212, 191, 0.12); }
-      .statusdot.warn { background: var(--warn); box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.12); }
-      .statusdot.bad { background: var(--danger); box-shadow: 0 0 0 6px rgba(251, 113, 133, 0.12); }
-      .proxy-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border-radius: 999px;
-        font-size: 12px;
-        color: var(--muted);
-        background: rgba(12, 20, 30, 0.86);
-      }
-      .proxy-badge strong { color: var(--text); font-weight: 600; }
-      .proxy-badge.ok { border-color: rgba(45, 212, 191, 0.35); }
-      .proxy-badge.warn { border-color: rgba(245, 158, 11, 0.35); }
-      .proxy-badge.bad { border-color: rgba(251, 113, 133, 0.35); }
-      main { padding: 22px 28px 32px; display: grid; gap: 16px; }
-      .toolbar, .panel, .release, .file, .pill, .proxy-badge {
-        border: 1px solid var(--border);
-        background: var(--panel);
-        box-shadow: var(--shadow);
-      }
-      .toolbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 14px;
-        border-radius: 18px;
-      }
-      .toolbar-left, .toolbar-right { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-      .pill {
-        padding: 8px 12px;
-        border-radius: 999px;
-        font-size: 12px;
-        color: var(--muted);
-        background: rgba(12, 20, 30, 0.86);
-      }
-      .grid { display: grid; grid-template-columns: 1.25fr 0.95fr; gap: 16px; align-items: start; }
-      .panel {
-        border-radius: 18px;
-        padding: 16px;
-        background: var(--panel);
-      }
-      .panel h2 {
-        margin: 0 0 12px;
-        font-size: 15px;
-        color: #f3f7fb;
-        letter-spacing: 0.01em;
-      }
-      .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-      button, select {
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        background: linear-gradient(180deg, rgba(25, 38, 54, 0.95), rgba(17, 27, 39, 0.98));
-        color: var(--text);
-        padding: 10px 13px;
-        font: inherit;
-      }
-      button {
-        cursor: pointer;
-        transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-      }
-      button:hover { transform: translateY(-1px); border-color: rgba(88, 166, 255, 0.5); }
-      button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-      button.primary {
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        border-color: transparent;
-        color: white;
-        font-weight: 700;
-      }
-      .small { color: var(--muted); font-size: 12px; }
-      .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
-      .value { font-size: 14px; margin-top: 4px; }
-      .release-list { display: grid; gap: 12px; }
-      .release {
-        border-radius: 16px;
-        padding: 14px;
-        background: var(--panel-2);
-        transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
-      }
-      .release.selected {
-        border-color: rgba(88, 166, 255, 0.6);
-        background: rgba(15, 28, 42, 0.98);
-        transform: translateY(-1px);
-      }
-      .release summary {
-        list-style: none;
-        cursor: pointer;
-      }
-      .release summary::-webkit-details-marker { display: none; }
-      .release-head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
-      .release h3 { margin: 0; font-size: 15px; }
-      .release .meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
-      .release .body { margin-top: 10px; color: #d7e0e9; font-size: 13px; line-height: 1.5; }
-      .release .actions { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
-      .files { display: grid; gap: 8px; max-height: 280px; overflow: auto; }
-      .file {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 9px 10px;
-        border-radius: 12px;
-        background: rgba(12, 20, 30, 0.9);
-        font-size: 13px;
-      }
-      .kpi { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
-      .kpi > div {
-        background: rgba(12, 20, 30, 0.9);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 10px;
-      }
-      .log {
-        max-height: 280px;
-        overflow: auto;
-        background: rgba(8, 14, 22, 0.95);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 12px;
-      }
-      pre {
-        margin: 0;
-        color: #c9d6e3;
-        font-size: 12px;
-        line-height: 1.45;
-        white-space: pre-wrap;
-        word-break: break-word;
-        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-      }
-      @media (max-width: 1160px) { .grid { grid-template-columns: 1fr; } }
-    </style>
+    <title>DS5Dongle 桌面烧录器</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/app.js"></script>
   </head>
   <body>
-    <header>
+    <header class="topbar">
       <div class="brand">
-        <div class="logo">DS</div>
+        <div class="brand-mark">🎮</div>
         <div>
-          <h1>DS5Dongle Flasher</h1>
-          <div class="sub">Electron desktop client for GitHub release flashing. Proxy follows Windows/Electron system settings when enabled, otherwise goes direct.</div>
-          <div class="statusline">
-            <div id="proxyBadge" class="proxy-badge"><span id="proxyDot" class="statusdot"></span><span id="proxyStatus">Checking proxy…</span></div>
-          </div>
+          <h1>DS5Dongle 桌面烧录器</h1>
+          <div class="chip-label">内置 Web Serial 烧录 · 直连串口</div>
         </div>
+      </div>
+      <div class="status" aria-live="polite">
+        <span id="statusDot" class="status-dot" data-status="idle"></span>
+        <span id="statusText">未连接</span>
       </div>
     </header>
 
     <main>
-      <section class="toolbar">
-        <div class="toolbar-left">
-          <button id="refreshBtn" class="primary">Refresh releases</button>
-          <select id="variantSelect">
-            <option value="std">STD</option>
-            <option value="hs">HS</option>
-          </select>
-          <button id="prepareBtn" disabled>Prepare selected release</button>
-        </div>
-        <div class="toolbar-right">
-          <div class="pill" id="statusPill">Idle</div>
-        </div>
-      </section>
+      <div id="supportNotice" class="support-notice" hidden>
+        当前环境不支持 Web Serial。请使用桌面版 Electron 启动。
+      </div>
 
-      <section class="grid">
-        <div class="panel">
-          <h2>Releases</h2>
-          <div id="releaseList" class="release-list"></div>
-        </div>
-
-        <div class="panel">
-          <h2>Selected package</h2>
-          <div id="packageSummary" class="release">
-            <div class="small">No package prepared yet.</div>
+      <div class="workspace">
+        <section class="panel">
+          <div class="panel-body">
+            <h2 class="panel-title">固件版本</h2>
+            <div id="releaseList" class="release-list" aria-live="polite"></div>
           </div>
-          <div class="release" style="margin-top:12px">
-            <div class="label">Progress log</div>
-            <div id="log" class="log" style="margin-top:10px"><pre>Ready.</pre></div>
-          </div>
-          <div class="release" style="margin-top:12px">
-            <div class="label">Detected files</div>
-            <div id="files" class="files" style="margin-top:10px"></div>
-          </div>
-        </div>
-      </section>
-    </main>
+        </section>
 
-    <script>
-      const state = {
-        config: null,
-        releases: [],
-        selectedTag: '',
-        selectedVariant: 'std',
-        packageData: null,
-      };
-
-      const statusEl = document.getElementById('statusPill');
-      const releaseListEl = document.getElementById('releaseList');
-      const packageSummaryEl = document.getElementById('packageSummary');
-      const filesEl = document.getElementById('files');
-      const logEl = document.getElementById('log');
-      const prepareBtn = document.getElementById('prepareBtn');
-      const variantSelect = document.getElementById('variantSelect');
-      const proxyStatusEl = document.getElementById('proxyStatus');
-      const proxyBadgeEl = document.getElementById('proxyBadge');
-      const proxyDotEl = document.getElementById('proxyDot');
-
-      function setStatus(text, cls = '') {
-        statusEl.className = `pill ${cls}`.trim();
-        statusEl.textContent = text;
-      }
-
-      function renderProxyStatus(status) {
-        if (!status) return;
-        let label = 'Direct connection';
-        let badgeClass = 'ok';
-        if (status.mode === 'proxy') {
-          label = `${status.source === 'system' ? 'System proxy' : 'Env proxy'}${status.proxyUrl ? ` · ${status.proxyUrl}` : ''}`;
-          badgeClass = 'ok';
-        } else if (status.mode === 'bypass') {
-          label = 'Bypassed by NO_PROXY';
-          badgeClass = 'warn';
-        } else {
-          label = 'Direct connection';
-          badgeClass = 'warn';
-        }
-        proxyStatusEl.textContent = label;
-        proxyBadgeEl.className = `proxy-badge ${badgeClass}`;
-        proxyDotEl.className = `statusdot ${badgeClass === 'ok' ? 'ok' : 'warn'}`;
-      }
-
-      function log(message) {
-        const pre = logEl.querySelector('pre') || document.createElement('pre');
-        pre.textContent = `${pre.textContent === 'Ready.' ? '' : pre.textContent + '\n'}${message}`;
-        logEl.innerHTML = '';
-        logEl.appendChild(pre);
-        logEl.scrollTop = logEl.scrollHeight;
-      }
-
-      async function fetchJson(url, options) {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-          throw new Error(await response.text());
-        }
-        return response.json();
-      }
-
-      function renderPackage(data) {
-        if (!data) {
-          packageSummaryEl.innerHTML = '<div class="small">No package prepared yet.</div>';
-          filesEl.innerHTML = '';
-          return;
-        }
-        packageSummaryEl.innerHTML = `
-          <div><strong>${data.tagName}</strong> · ${data.variant.toUpperCase()}</div>
-          <div class="small">Package ID: ${data.packageId}</div>
-          <div class="kpi" style="margin-top:12px">
-            <div><div class="label">Files</div><div class="value">${data.files.length}</div></div>
-            <div><div class="label">Warnings</div><div class="value">${data.warnings.length}</div></div>
-            <div><div class="label">Asset</div><div class="value">${data.asset?.name || 'n/a'}</div></div>
-          </div>
-          <div class="small" style="margin-top:10px">Flash manifest is generated locally in the app data directory.</div>
-        `;
-        filesEl.innerHTML = data.files.map((file) => `
-          <div class="file"><span>${file.relativePath}</span><span class="small">${file.size} bytes</span></div>
-        `).join('');
-      }
-
-      function renderReleases() {
-        if (!state.releases.length) {
-          releaseListEl.innerHTML = '<div class="small">No releases loaded.</div>';
-          return;
-        }
-        releaseListEl.innerHTML = state.releases.map((release) => `
-          <details class="release ${state.selectedTag === release.tagName ? 'selected' : ''}" ${state.selectedTag === release.tagName ? 'open' : ''}>
-            <summary>
-              <div class="release-head">
-                <div>
-                  <h3>${release.tagName}${release.isLatest ? ' <span class="small">(latest)</span>' : ''}</h3>
-                  <div class="meta">${release.name || release.tagName}</div>
-                </div>
-                <div class="meta">${release.publishedAt ? new Date(release.publishedAt).toLocaleDateString() : 'unknown date'}</div>
-              </div>
-            </summary>
-            <div class="body">${(release.body || '').slice(0, 260) || 'No release notes.'}</div>
-            <div class="actions">
-              <button data-tag="${release.tagName}">${state.selectedTag === release.tagName ? 'Selected' : 'Select'}</button>
+        <section class="panel">
+          <div class="panel-body">
+            <h2 class="panel-title">设备</h2>
+            <div class="serial-actions">
+              <button id="connectButton" class="button button-primary" type="button">连接串口</button>
+              <button id="disconnectButton" class="button" type="button" disabled>断开</button>
             </div>
-          </details>
-        `).join('');
-        releaseListEl.querySelectorAll('button[data-tag]').forEach((button) => {
-          button.addEventListener('click', () => {
-            state.selectedTag = button.dataset.tag;
-            prepareBtn.disabled = !state.selectedTag;
-            renderReleases();
-          });
-        });
-        prepareBtn.disabled = !state.selectedTag;
-      }
 
-      async function loadReleases() {
-        setStatus('Loading releases...', '');
-        const payload = await fetchJson('/api/releases');
-        state.releases = payload.releases || [];
-        if (!state.selectedTag && state.releases[0]) {
-          state.selectedTag = state.releases[0].tagName;
-        }
-        renderReleases();
-        setStatus(`Loaded ${state.releases.length} releases`, 'ok');
-        proxyBadgeEl.style.opacity = '1';
-      }
+            <div class="actions">
+              <button id="loadLatestButton" class="button button-primary" type="button">连接并烧录最新 release</button>
+              <button id="flashButton" class="button button-primary" type="button" disabled>开始烧录</button>
+              <button id="cancelButton" class="button button-danger" type="button" hidden>停止</button>
+            </div>
 
-      async function loadProxyStatus() {
-        try {
-          const payload = await fetchJson('/api/proxy-status?url=https%3A%2F%2Fapi.github.com');
-          renderProxyStatus(payload);
-        } catch (error) {
-          proxyStatusEl.textContent = `Proxy: ${error.message}`;
-        }
-      }
+            <div class="settings">
+              <label class="setting-row">
+                <span class="setting-copy"><strong>芯片</strong><span>留空时由 BootROM 自动检测</span></span>
+                <select id="chipSelect" class="chip-select">
+                  <option value="">自动检测</option>
+                  <option value="bl602">BL602</option>
+                  <option value="bl616">BL616</option>
+                  <option value="bl616cl">BL616CL</option>
+                </select>
+              </label>
+              <label class="setting-row">
+                <span class="setting-copy"><strong>自动进入 BootROM</strong><span>DTR / RTS 控制 BOOT 和 RESET</span></span>
+                <span class="switch"><input id="autoReset" type="checkbox" checked><span class="switch-track"></span></span>
+              </label>
+              <label class="setting-row">
+                <span class="setting-copy"><strong>完成后通过 RTS 运行</strong><span>校验通过后自动复位芯片</span></span>
+                <span class="switch"><input id="runAfterFlash" type="checkbox" checked><span class="switch-track"></span></span>
+              </label>
+            </div>
 
-      async function prepareSelected() {
-        if (!state.selectedTag) return;
-        state.selectedVariant = variantSelect.value;
-        setStatus(`Preparing ${state.selectedTag}...`, 'warn');
-        log(`Preparing ${state.selectedTag} / ${state.selectedVariant.toUpperCase()}`);
-        const response = await fetch(`/api/releases/${encodeURIComponent(state.selectedTag)}/prepare/stream?variant=${encodeURIComponent(state.selectedVariant)}`);
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
+            <div class="drop-zone" id="dropZone">
+              <input id="binFile" class="file-input" type="file" accept=".bin,application/octet-stream" />
+              <div>
+                <div class="file-symbol">BIN</div>
+                <p id="fileName" class="file-name">选择或拖入 whole.bin</p>
+                <p id="fileMeta" class="file-meta">whole.bin · 写入地址 0x00000000</p>
+              </div>
+            </div>
 
-        const processChunk = () => {
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-          let event = 'message';
-          let data = '';
-          for (const line of lines) {
-            if (line.startsWith('event: ')) event = line.slice(7).trim();
-            else if (line.startsWith('data: ')) data += line.slice(6).trim();
-            else if (line === '') {
-              if (data) {
-                const parsed = JSON.parse(data);
-                if (event === 'log') log(parsed.message);
-                if (event === 'progress') setStatus(parsed.message || 'Working...', 'warn');
-                if (event === 'ready') {
-                  state.packageData = parsed;
-                  renderPackage(parsed);
-                  setStatus('Package ready', 'ok');
-                }
-                if (event === 'error') setStatus(parsed.message, 'bad');
-              }
-              event = 'message';
-              data = '';
-            }
-          }
-        };
+            <div class="progress-wrap" aria-live="polite">
+              <div class="progress-heading">
+                <span id="stageText" class="stage-text">等待选择版本</span>
+                <span id="progressValue" class="progress-value">0%</span>
+              </div>
+              <progress id="progressBar" max="100" value="0">0%</progress>
+            </div>
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-          processChunk();
-        }
-      }
+            <div id="packageSummary" class="package-summary">
+              <span class="pill subtle">未选择版本</span>
+              <span class="pill subtle">串口未连接</span>
+              <span class="pill subtle">STD 模式</span>
+            </div>
 
-      document.getElementById('refreshBtn').addEventListener('click', () => loadReleases().catch((error) => setStatus(error.message, 'bad')));
-      prepareBtn.addEventListener('click', () => prepareSelected().catch((error) => setStatus(error.message, 'bad')));
-      variantSelect.addEventListener('change', () => { state.selectedVariant = variantSelect.value; });
+            <div id="packageCard" class="package-card empty">
+              <div class="package-head">
+                <div>
+                  <strong id="packageTitle">还没选包</strong>
+                  <p id="packageMeta">点开某个 release 后，会自动拉取、解压并准备好文件。</p>
+                </div>
+              </div>
+              <ul id="packageFiles" class="package-files"></ul>
+            </div>
+          </div>
+        </section>
 
-      loadProxyStatus().catch(() => {
-        proxyStatusEl.textContent = 'Proxy: unavailable';
-        proxyBadgeEl.className = 'proxy-badge warn';
-      });
-      loadReleases().catch((error) => setStatus(error.message, 'bad'));
-    </script>
+        <section class="panel log-panel">
+          <div class="log-header">
+            <h2 class="panel-title">日志</h2>
+            <button id="clearLog" class="clear-log" type="button">清空</button>
+          </div>
+          <div id="log" class="log" role="log" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
   </body>
 </html>
